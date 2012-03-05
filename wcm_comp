@@ -1,0 +1,14 @@
+#!/bin/bash
+#Compare the output from the test and live WCM webservices
+#Required argument is WCM LSID, e.g. urn:kew.org:wcs:taxon:239754
+
+LIVE="http://apps.kew.org/wcsTaxonExtractor/endpoint?function=details_tcs&scratchpad=test.info&id="
+TEST="http://test.e-monocot.org/wcsTaxonExtractor/endpoint?function=details_tcs&scratchpad=test.info&id="
+
+curl -0 "$LIVE$1" > wcm_live_raw.xml
+curl -0 "$TEST$1" > wcm_test_raw.xml
+
+xmllint --format wcm_live_raw.xml > wcm_live.xml
+xmllint --format wcm_test_raw.xml > wcm_test.xml
+
+diff wcm_live.xml wcm_test.xml
